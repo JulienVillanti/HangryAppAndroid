@@ -21,7 +21,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
 
-                Intent intent = new Intent(SplashActivity.this, SigninActivity.class);
+                Intent intent = new Intent(SplashActivity.this, com.example.hangryappandroid.SigninActivity.class);
                 startActivity(intent);
 
 

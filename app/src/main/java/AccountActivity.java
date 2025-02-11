@@ -20,40 +20,40 @@ public class AccountActivity extends AppCompatActivity {
         Button adminButton = findViewById(R.id.adminButton);
 
 
-        driverButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(AccountActivity.this, com.example.hangryappandroid.DriverLoginActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        userButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Abrir a tela de login do usuário
-                Intent intent = new Intent(AccountActivity.this, com.example.hangryappandroid.UserLoginActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        restaurantButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Abrir a tela de login do restaurante
-                Intent intent = new Intent(AccountActivity.this, com.example.hangryappandroid.RestaurantLoginActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        adminButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(AccountActivity.this, com.example.hangryapp.AdminLoginActivity.class);
-                startActivity(intent);
-            }
-        });
+//        driverButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                Intent intent = new Intent(AccountActivity.this, com.example.hangryappandroid.DriverLoginActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+//
+//        userButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // Abrir a tela de login do usuário
+//                Intent intent = new Intent(AccountActivity.this, com.example.hangryappandroid.UserLoginActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+//
+//        restaurantButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // Abrir a tela de login do restaurante
+//                Intent intent = new Intent(AccountActivity.this, com.example.hangryappandroid.RestaurantLoginActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+//
+//        adminButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                Intent intent = new Intent(AccountActivity.this, com.example.hangryapp.AdminLoginActivity.class);
+//                startActivity(intent);
+//            }
+//        });
     }
 }

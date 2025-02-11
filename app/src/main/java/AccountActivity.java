@@ -24,7 +24,7 @@ public class AccountActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(AccountActivity.this, DriverLoginActivity.class);
+                Intent intent = new Intent(AccountActivity.this, com.example.hangryappandroid.DriverLoginActivity.class);
                 startActivity(intent);
             }
         });
@@ -33,7 +33,7 @@ public class AccountActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Abrir a tela de login do usuário
-                Intent intent = new Intent(AccountActivity.this, UserLoginActivity.class);
+                Intent intent = new Intent(AccountActivity.this, com.example.hangryappandroid.UserLoginActivity.class);
                 startActivity(intent);
             }
         });
@@ -42,7 +42,7 @@ public class AccountActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Abrir a tela de login do restaurante
-                Intent intent = new Intent(AccountActivity.this, RestaurantLoginActivity.class);
+                Intent intent = new Intent(AccountActivity.this, com.example.hangryappandroid.RestaurantLoginActivity.class);
                 startActivity(intent);
             }
         });
@@ -50,8 +50,8 @@ public class AccountActivity extends AppCompatActivity {
         adminButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              
-                Intent intent = new Intent(AccountActivity.this, AdminLoginActivity.class);
+
+                Intent intent = new Intent(AccountActivity.this, com.example.hangryapp.AdminLoginActivity.class);
                 startActivity(intent);
             }
         });

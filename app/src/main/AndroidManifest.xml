@@ -12,7 +12,6 @@
         android:theme="@style/Theme.HangryAppAndroid"
         tools:targetApi="31">
 
-        <!-- SplashActivity -->
         <activity
             android:name=".SplashActivity"
             android:exported="true"
@@ -23,13 +22,16 @@
             </intent-filter>
         </activity>
 
-        <!-- AccountActivity, que será chamada após a Splash -->
+        <activity
+            android:name=".SigninActivity"
+            android:exported="true"
+            android:theme="@style/Theme.HangryAppAndroid" />
+
         <activity
             android:name=".AccountActivity"
             android:exported="true"
             android:theme="@style/Theme.HangryAppAndroid" />
 
-        <!-- Outras telas (como MainActivity, que não será a principal agora) -->
         <activity
             android:name=".MainActivity"
             android:exported="true"

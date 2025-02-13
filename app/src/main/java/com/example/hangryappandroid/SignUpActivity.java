@@ -1,10 +1,7 @@
-import androidx.appcompat.app.AppCompatActivity;
 package com.example.hangryappandroid;
 
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-
-
-import com.example.hangryappandroid.R;
 
 public class SignUpActivity extends AppCompatActivity {
 

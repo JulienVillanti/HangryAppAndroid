@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 public class ResetPasswordActivity extends AppCompatActivity {
@@ -21,6 +21,11 @@ public class ResetPasswordActivity extends AppCompatActivity {
         editTextEmail = findViewById(R.id.editTextResetEmail);
         resetPasswordButton = findViewById(R.id.resetPasswordButton);
 
-        resetPasswordButton.setOnClickListener(new View.OnClickListener() );
+        resetPasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 }

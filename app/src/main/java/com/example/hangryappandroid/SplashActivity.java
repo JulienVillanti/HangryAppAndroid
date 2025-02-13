@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.hangryappandroid.AccountActivity;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -21,7 +20,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
 
-                Intent intent = new Intent(SplashActivity.this, com.example.hangryappandroid.SigninActivity.class);
+                Intent intent = new Intent(SplashActivity.this, SigninActivity.class);
                 startActivity(intent);
 
 

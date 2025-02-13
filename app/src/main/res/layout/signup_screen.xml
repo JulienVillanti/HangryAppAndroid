@@ -89,7 +89,7 @@
 
 
             <Button
-                android:id="@+id/singUpButton"
+                android:id="@+id/singUpBtn"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:text="Sign Up"

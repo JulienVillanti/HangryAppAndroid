@@ -25,7 +25,12 @@ public class SigninActivity extends AppCompatActivity {
         signUpButton = findViewById(R.id.signUpButton);
         resetPasswordButton = findViewById(R.id.resetPasswordButton);
 
-
+        //retrieve the email automatically
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("email")) {
+            String email = intent.getStringExtra("email");
+            editTextEmail.setText(email);
+        }
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

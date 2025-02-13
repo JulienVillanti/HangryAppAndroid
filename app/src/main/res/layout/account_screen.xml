@@ -81,14 +81,7 @@
             android:backgroundTint="@color/yellowhangry"
             android:layout_marginEnd="16dp" />
 
-        <Button
-            android:id="@+id/adminButton"
-            android:layout_width="120dp"
-            android:layout_height="wrap_content"
-            android:text="Admin"
-            android:textColor="@color/bluewhangry"
-            android:backgroundTint="@color/yellowhangry"
-            android:layout_marginEnd="16dp" />
+
 
     </LinearLayout>
     </HorizontalScrollView>

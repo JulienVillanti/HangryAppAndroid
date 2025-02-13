@@ -9,16 +9,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class SignUpActivity extends AppCompatActivity {
 
     private EditText editTextEmail, editTextPassword;
     private Button signUpButton;
     private TextView signInTextView;
 
+    private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signup_screen);
+
+        mAuth = FirebaseAuth.getInstance();
 
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.editTextPassword);
@@ -39,24 +46,36 @@ public class SignUpActivity extends AppCompatActivity {
                     Toast.makeText(SignUpActivity.this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
                 } else {
 
-                    Toast.makeText(SignUpActivity.this, "Sign up successful!", Toast.LENGTH_SHORT).show();
+                    mAuth.createUserWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(SignUpActivity.this, task -> {
+                                if (task.isSuccessful()) {
+                                    // Cadastro bem-sucedido
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    if (user != null) {
+                                        Toast.makeText(SignUpActivity.this, "Sign up successful!", Toast.LENGTH_SHORT).show();
 
-                    // Redirecionar para a MainActivity após o cadastro
-                    Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
+                                        // Redirecionar para a SigninActivity com o email preenchido
+                                        Intent intent = new Intent(SignUpActivity.this, SigninActivity.class);
+                                        intent.putExtra("email", email); // Passar o email como extra
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                } else {
+
+                                    Toast.makeText(SignUpActivity.this, "Sign up failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
                 }
             }
         });
 
+                    signInTextView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
 
-        signInTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Redirecionar para a SigninActivity
-                Intent intent = new Intent(SignUpActivity.this, SigninActivity.class);
-                startActivity(intent);
+                            Intent intent = new Intent(SignUpActivity.this, SigninActivity.class);
+                            startActivity(intent);
+                        }
+                    });
+                }
             }
-        });
-    }
-}

@@ -1,22 +1,60 @@
 package com.example.hangryappandroid;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+
 public class AccountActivity extends AppCompatActivity {
+    private Button driverButton, userButton, restaurantButton;
+
+    private FirebaseAuth mAuth;
+    private DatabaseReference databaseRef;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.account_screen);
 
+        mAuth = FirebaseAuth.getInstance();
+        databaseRef = FirebaseDatabase.getInstance().getReference();
 
-        Button driverButton = findViewById(R.id.driverButton);
-        Button userButton = findViewById(R.id.userButton);
-        Button restaurantButton = findViewById(R.id.restaurantButton);
-        Button adminButton = findViewById(R.id.adminButton);
+        driverButton = findViewById(R.id.driverButton);
+        userButton = findViewById(R.id.userButton);
+        restaurantButton = findViewById(R.id.restaurantButton);
 
+        driverButton.setOnClickListener(v -> saveAccountTypeAndRedirect("driver"));
+        userButton.setOnClickListener(v -> saveAccountTypeAndRedirect("user"));
+        restaurantButton.setOnClickListener(v -> saveAccountTypeAndRedirect("restaurant"));
+    }
 
+    private void saveAccountTypeAndRedirect(String accountType) {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            String userId = user.getUid();
+            databaseRef.child("users").child(userId).child("accountType").setValue(accountType)
+                    .addOnSuccessListener(aVoid -> {
+
+                        Intent intent = new Intent(AccountActivity.this, SigninActivity.class);
+                        startActivity(intent);
+                        finish();
+                    })
+                    .addOnFailureListener(e -> {
+
+                    });
+        } else {
+
+            Intent intent = new Intent(AccountActivity.this, SigninActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 }
+

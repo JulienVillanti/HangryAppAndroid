@@ -19,7 +19,6 @@ public class SigninActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signin_screen);
 
-        // Associando as views
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.editTextPassword);
         signInButton = findViewById(R.id.cirLoginButton);
@@ -41,7 +40,7 @@ public class SigninActivity extends AppCompatActivity {
                     finish();
                 } else {
 
-                    // Aqui pode ser um simples Toast ou mostrar um erro na interface
+
                 }
             }
         });
@@ -59,7 +58,7 @@ public class SigninActivity extends AppCompatActivity {
         resetPasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Redirecionar para a tela de recuperação de senha
+
                 Intent intent = new Intent(SigninActivity.this, ResetPasswordActivity.class);
                 startActivity(intent);
             }

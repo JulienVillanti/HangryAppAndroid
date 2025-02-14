@@ -49,20 +49,19 @@ public class SigninActivity extends AppCompatActivity {
 
                     Toast.makeText(SigninActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
                 } else {
-                    // Fazer login com Firebase Authentication
+
                     mAuth.signInWithEmailAndPassword(email, password)
                             .addOnCompleteListener(SigninActivity.this, task -> {
                                 if (task.isSuccessful()) {
 
                                     Toast.makeText(SigninActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
 
-
                                     Intent intent = new Intent(SigninActivity.this, MainActivity.class);
                                     startActivity(intent);
                                     finish();
                                 } else {
 
-                                    Toast.makeText(SigninActivity.this, "Login failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SigninActivity.this,  task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
                 }

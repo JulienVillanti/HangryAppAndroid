@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -19,6 +21,7 @@ public class SignUpActivity extends AppCompatActivity {
     private TextView signInTextView;
 
     private FirebaseAuth mAuth;
+    private DatabaseReference databaseRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +29,7 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.signup_screen);
 
         mAuth = FirebaseAuth.getInstance();
+        databaseRef = FirebaseDatabase.getInstance().getReference();
 
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.editTextPassword);
@@ -45,23 +49,26 @@ public class SignUpActivity extends AppCompatActivity {
                 } else if (password.length() < 6) {
                     Toast.makeText(SignUpActivity.this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
                 } else {
-
                     mAuth.createUserWithEmailAndPassword(email, password)
                             .addOnCompleteListener(SignUpActivity.this, task -> {
                                 if (task.isSuccessful()) {
-                                    // Cadastro bem-sucedido
                                     FirebaseUser user = mAuth.getCurrentUser();
-                                    if (user != null) {
-                                        Toast.makeText(SignUpActivity.this, "Sign up successful!", Toast.LENGTH_SHORT).show();
 
-                                        // Redirecionar para a SigninActivity com o email preenchido
+                                    if (user != null) {
+                                        String userId = user.getUid();
+                                        DatabaseReference userRef = databaseRef.child("users").child(userId);
+                                        userRef.child("email").setValue(email);
+
+                                        Toast.makeText(SignUpActivity.this, "Sign up successful! Please log in.", Toast.LENGTH_SHORT).show();
+
+                                        // Redirecionar para a tela de login
                                         Intent intent = new Intent(SignUpActivity.this, SigninActivity.class);
-                                        intent.putExtra("email", email); // Passar o email como extra
+
+                                        intent.putExtra("email", email);
                                         startActivity(intent);
                                         finish();
                                     }
                                 } else {
-
                                     Toast.makeText(SignUpActivity.this, "Sign up failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
@@ -69,13 +76,13 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
-                    signInTextView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            Intent intent = new Intent(SignUpActivity.this, SigninActivity.class);
-                            startActivity(intent);
-                        }
-                    });
-                }
+        signInTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Redirecionar para a tela de login
+                Intent intent = new Intent(SignUpActivity.this, SigninActivity.class);
+                startActivity(intent);
             }
+        });
+    }
+}

@@ -16,6 +16,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+
 public class SigninActivity extends AppCompatActivity {
 
     private EditText editTextEmail, editTextPassword;
@@ -24,6 +26,7 @@ public class SigninActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private DatabaseReference databaseRef;
+    private String accountType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,7 @@ public class SigninActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         databaseRef = FirebaseDatabase.getInstance().getReference();
+        accountType = getIntent().getStringExtra("accountType");
 
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.editTextPassword);
@@ -70,8 +74,11 @@ public class SigninActivity extends AppCompatActivity {
                                                 if (dataSnapshot.exists()) {
                                                     String accountType = dataSnapshot.child("accountType").getValue(String.class);
 
-                                                    if (accountType != null) {
-                                                        // Vincula o tipo de conta e redireciona com base nele, se necessário
+                                                    if (accountType != null)
+                                                    {
+                                                        HashMap<String, Object> userData = new HashMap<>();
+                                                        userData.put("accountType", accountType);
+
                                                         Intent mainIntent = new Intent(SigninActivity.this, MainActivity.class);
                                                         mainIntent.putExtra("accountType", accountType);
                                                         startActivity(mainIntent);

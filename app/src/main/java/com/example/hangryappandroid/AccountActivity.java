@@ -16,6 +16,7 @@ import java.util.HashMap;
 
 
 public class AccountActivity extends AppCompatActivity {
+
     private Button driverButton, userButton, restaurantButton;
     private FirebaseAuth auth;
     private DatabaseReference databaseRef;
@@ -32,34 +33,16 @@ public class AccountActivity extends AppCompatActivity {
         userButton = findViewById(R.id.userButton);
         restaurantButton = findViewById(R.id.restaurantButton);
 
-        driverButton.setOnClickListener(v -> saveAccountTypeAndRedirect("driver"));
-        userButton.setOnClickListener(v -> saveAccountTypeAndRedirect("user"));
-        restaurantButton.setOnClickListener(v -> saveAccountTypeAndRedirect("restaurant"));
+        driverButton.setOnClickListener(v -> redirectToSignUp("driver"));
+        userButton.setOnClickListener(v -> redirectToSignUp("user"));
+        restaurantButton.setOnClickListener(v ->redirectToSignUp("restaurant"));
     }
 
-    private void saveAccountTypeAndRedirect(String accountType) {
-        FirebaseUser user = auth.getCurrentUser();
+    private void redirectToSignUp(String accountType) {
 
-        if (user != null) {
-            String userId = user.getUid();
-
-
-            databaseRef.child("users").child(userId).child("accountType").setValue(accountType)
-                    .addOnSuccessListener(aVoid -> {
-
-                        Intent intent = new Intent(AccountActivity.this, SigninActivity.class);
-                        startActivity(intent);
-                        finish();
-                    })
-                    .addOnFailureListener(e -> {
-
-                        Toast.makeText(AccountActivity.this, "Failed to save account type: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    });
-        } else {
-
-            Intent intent = new Intent(AccountActivity.this, SigninActivity.class);
-            startActivity(intent);
-            finish();
-        }
+        Intent intent = new Intent(AccountActivity.this, SignUpActivity.class);
+        intent.putExtra("accountType", accountType);
+        startActivity(intent);
+        finish(); 
     }
 }

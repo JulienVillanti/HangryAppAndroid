@@ -11,6 +11,12 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class SigninActivity extends AppCompatActivity {
 
@@ -19,6 +25,7 @@ public class SigninActivity extends AppCompatActivity {
     private TextView signUpButton, resetPasswordButton;
 
     private FirebaseAuth mAuth;
+    private DatabaseReference databaseRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +33,7 @@ public class SigninActivity extends AppCompatActivity {
         setContentView(R.layout.signin_screen);
 
         mAuth = FirebaseAuth.getInstance();
+        databaseRef = FirebaseDatabase.getInstance().getReference();
 
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.editTextPassword);
@@ -54,20 +62,40 @@ public class SigninActivity extends AppCompatActivity {
                             .addOnCompleteListener(SigninActivity.this, task -> {
                                 if (task.isSuccessful()) {
 
-                                    Toast.makeText(SigninActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    if (user != null) {
+                                        String userId = user.getUid();
 
-                                    Intent intent = new Intent(SigninActivity.this, MainActivity.class);
-                                    startActivity(intent);
-                                    finish();
+                                        databaseRef.child("users").child(userId).child("accountType")
+                                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                                        String accountType = dataSnapshot.getValue(String.class);
+
+
+                                                        if ("driver".equals(accountType)) {
+                                                            Intent driverIntent = new Intent(SigninActivity.this, DriverActivity.class);
+                                                            startActivity(driverIntent);
+                                                        } else if ("user".equals(accountType)) {
+                                                            Intent userIntent = new Intent(SigninActivity.this, UserActivity.class);
+                                                            startActivity(userIntent);
+                                                        }
+                                                        finish();
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(DatabaseError databaseError) {
+                                                        Toast.makeText(SigninActivity.this, "Failed to retrieve account type.", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                    }
                                 } else {
-
-                                    Toast.makeText(SigninActivity.this,  task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SigninActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
                 }
             }
         });
-
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

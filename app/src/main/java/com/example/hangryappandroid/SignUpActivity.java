@@ -14,6 +14,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
+
 public class SignUpActivity extends AppCompatActivity {
 
     private EditText editTextName,editTextEmail, editTextPassword;
@@ -22,6 +24,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private DatabaseReference databaseRef;
+    private String accountType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +33,8 @@ public class SignUpActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         databaseRef = FirebaseDatabase.getInstance().getReference();
+
+        accountType = getIntent().getStringExtra("accountType");
 
         editTextName = findViewById(R.id.editTextName);
         editTextEmail = findViewById(R.id.editTextEmail);
@@ -57,35 +62,42 @@ public class SignUpActivity extends AppCompatActivity {
                                     FirebaseUser user = mAuth.getCurrentUser();
 
                                     if (user != null) {
+
                                         String userId = user.getUid();
-                                        DatabaseReference userRef = databaseRef.child("users").child(userId);
 
-                                        userRef.child("name").setValue(name);
-                                        userRef.child("email").setValue(email);`
-                                        userRef.child("accountType").setValue(accountType);
+                                        HashMap<String, Object> userData = new HashMap<>();
+                                        userData.put("name", name);
+                                        userData.put("email", email);
+                                        userData.put("accountType", accountType);
 
-                                        Toast.makeText(SignUpActivity.this, "Sign up successful!", Toast.LENGTH_SHORT).show();
 
-                                        Intent intent = new Intent(SignUpActivity.this, SigninActivity.class);
-                                        intent.putExtra("email", email);
-                                        startActivity(intent);
-                                        finish();
+                                        databaseRef.child("users").child(userId).setValue(userData)
+                                                .addOnSuccessListener(aVoid -> {
+                                                    Toast.makeText(SignUpActivity.this, "Sign up successful!", Toast.LENGTH_SHORT).show();
 
+                                                    Intent intent = new Intent(SignUpActivity.this, SigninActivity.class);
+                                                    intent.putExtra("email", email);
+                                                    startActivity(intent);
+                                                    finish();
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    Toast.makeText(SignUpActivity.this, "Failed to save user data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                });
                                     }
-                                }  else {
+                                } else {
                                     Toast.makeText(SignUpActivity.this, "Sign up failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
                 }
             }
-        });
+            });
 
         signInTextView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SignUpActivity.this, SigninActivity.class);
-                startActivity(intent);
-            }
+            public void onClick(View v){
+                    Intent intent = new Intent(SignUpActivity.this, SigninActivity.class);
+                    startActivity(intent);
+                }
         });
     }
 }

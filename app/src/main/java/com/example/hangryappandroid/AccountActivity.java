@@ -42,27 +42,21 @@ public class AccountActivity extends AppCompatActivity {
 
         if (user != null) {
             String userId = user.getUid();
-            String userEmail = user.getEmail();
 
 
-            HashMap<String, Object> userData = new HashMap<>();
-            userData.put("email", userEmail);
-            userData.put("accountType", accountType); // Salva o tipo de conta
-
-            // Salva os dados do usuário no Firebase Realtime Database
-            databaseRef.child("users").child(userId).setValue(userData)
+            databaseRef.child("users").child(userId).child("accountType").setValue(accountType)
                     .addOnSuccessListener(aVoid -> {
-                        // Redireciona para a tela de login
+
                         Intent intent = new Intent(AccountActivity.this, SigninActivity.class);
                         startActivity(intent);
                         finish();
                     })
                     .addOnFailureListener(e -> {
-                        // Exibe uma mensagem de erro em caso de falha
+
                         Toast.makeText(AccountActivity.this, "Failed to save account type: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     });
         } else {
-            // Se o usuário não estiver logado, redireciona para a tela de login
+
             Intent intent = new Intent(AccountActivity.this, SigninActivity.class);
             startActivity(intent);
             finish();

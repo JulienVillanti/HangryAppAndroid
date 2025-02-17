@@ -61,22 +61,19 @@ public class SigninActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     FirebaseUser user = mAuth.getCurrentUser();
 
-                                    Intent mainIntent = new Intent(SigninActivity.this, MainActivity.class);
-                                    startActivity(mainIntent);  if (user != null) {
+                                    if (user != null) {
                                         String userId = user.getUid();
 
 
                                         databaseRef.child("users").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
-                                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                                if (dataSnapshot.exists()) {
+                                            public void onDataChange(DataSnapshot dataSnapshot ) {
+
+                                                if (dataSnapshot.exists() && dataSnapshot.hasChild("accountType")) {
+
                                                     String accountType = dataSnapshot.child("accountType").getValue(String.class);
 
-                                                    if (accountType != null)
-                                                    {
-                                                        HashMap<String, Object> userData = new HashMap<>();
-                                                        userData.put("accountType", accountType);
-
+                                                    if (accountType != null) {
                                                         redirectToAccountActivity(accountType);
                                                     } else {
                                                         Toast.makeText(SigninActivity.this, "Account type not found.", Toast.LENGTH_SHORT).show();

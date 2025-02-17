@@ -16,7 +16,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    private EditText editTextEmail, editTextPassword;
+    private EditText editTextName,editTextEmail, editTextPassword;
     private Button signUpButton;
     private TextView signInTextView;
 
@@ -31,6 +31,7 @@ public class SignUpActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         databaseRef = FirebaseDatabase.getInstance().getReference();
 
+        editTextName = findViewById(R.id.editTextName);
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.editTextPassword);
         signUpButton = findViewById(R.id.singUpBtn);
@@ -39,38 +40,37 @@ public class SignUpActivity extends AppCompatActivity {
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String name = editTextName.getText().toString();
                 String email = editTextEmail.getText().toString();
                 String password = editTextPassword.getText().toString();
 
-                if (email.isEmpty() || password.isEmpty()) {
+                if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
                     Toast.makeText(SignUpActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
                 } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                     Toast.makeText(SignUpActivity.this, "Invalid email address", Toast.LENGTH_SHORT).show();
                 } else if (password.length() < 6) {
                     Toast.makeText(SignUpActivity.this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
                 } else {
-
-                    String accountType = "users";
-
                     mAuth.createUserWithEmailAndPassword(email, password)
                             .addOnCompleteListener(SignUpActivity.this, task -> {
                                 if (task.isSuccessful()) {
                                     FirebaseUser user = mAuth.getCurrentUser();
 
-
                                     if (user != null) {
                                         String userId = user.getUid();
                                         DatabaseReference userRef = databaseRef.child("users").child(userId);
 
-                                        userRef.child("email").setValue(email);
+                                        userRef.child("name").setValue(name);
+                                        userRef.child("email").setValue(email);`
                                         userRef.child("accountType").setValue(accountType);
 
                                         Toast.makeText(SignUpActivity.this, "Sign up successful!", Toast.LENGTH_SHORT).show();
 
-                                        Intent loginIntent = new Intent(SignUpActivity.this, SigninActivity.class);
-                                        loginIntent.putExtra("email", email);
-                                        startActivity(loginIntent);
+                                        Intent intent = new Intent(SignUpActivity.this, SigninActivity.class);
+                                        intent.putExtra("email", email);
+                                        startActivity(intent);
                                         finish();
+
                                     }
                                 }  else {
                                     Toast.makeText(SignUpActivity.this, "Sign up failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -79,6 +79,7 @@ public class SignUpActivity extends AppCompatActivity {
                 }
             }
         });
+
         signInTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

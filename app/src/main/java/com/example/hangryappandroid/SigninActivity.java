@@ -7,9 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -54,48 +52,54 @@ public class SigninActivity extends AppCompatActivity {
                 String password = editTextPassword.getText().toString();
 
                 if (email.isEmpty() || password.isEmpty()) {
-
                     Toast.makeText(SigninActivity.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
                 } else {
-
                     mAuth.signInWithEmailAndPassword(email, password)
                             .addOnCompleteListener(SigninActivity.this, task -> {
                                 if (task.isSuccessful()) {
-
                                     FirebaseUser user = mAuth.getCurrentUser();
-                                    if (user != null) {
+
+                                    Intent mainIntent = new Intent(SigninActivity.this, MainActivity.class);
+                                    startActivity(mainIntent);  if (user != null) {
                                         String userId = user.getUid();
 
-                                        databaseRef.child("users").child(userId).child("accountType")
-                                                .addListenerForSingleValueEvent(new ValueEventListener() {
-                                                    @Override
-                                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                                        String accountType = dataSnapshot.getValue(String.class);
+                                        // Recuperar o tipo de conta do Firebase Realtime Database
+                                        databaseRef.child("users").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                if (dataSnapshot.exists()) {
+                                                    String accountType = dataSnapshot.child("accountType").getValue(String.class);
 
-
-                                                        if ("driver".equals(accountType)) {
-                                                            Intent driverIntent = new Intent(SigninActivity.this, DriverActivity.class);
-                                                            startActivity(driverIntent);
-                                                        } else if ("user".equals(accountType)) {
-                                                            Intent userIntent = new Intent(SigninActivity.this, UserActivity.class);
-                                                            startActivity(userIntent);
-                                                        }
+                                                    if (accountType != null) {
+                                                        // Vincula o tipo de conta e redireciona com base nele, se necessário
+                                                        Intent mainIntent = new Intent(SigninActivity.this, MainActivity.class);
+                                                        mainIntent.putExtra("accountType", accountType);
+                                                        startActivity(mainIntent);
                                                         finish();
+                                                    } else {
+                                                        Toast.makeText(SigninActivity.this, "Account type not found.", Toast.LENGTH_SHORT).show();
                                                     }
+                                                }
+                                            }
 
-                                                    @Override
-                                                    public void onCancelled(DatabaseError databaseError) {
-                                                        Toast.makeText(SigninActivity.this, "Failed to retrieve account type.", Toast.LENGTH_SHORT).show();
-                                                    }
-                                                });
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+                                                Toast.makeText(SigninActivity.this, "Failed to retrieve account type.", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
                                     }
                                 } else {
                                     Toast.makeText(SigninActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            });
+
+
+                }
+
+        });
                 }
             }
         });
+
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

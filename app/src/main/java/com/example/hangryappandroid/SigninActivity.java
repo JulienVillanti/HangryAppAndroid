@@ -26,7 +26,6 @@ public class SigninActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private DatabaseReference databaseRef;
-    private String accountType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +34,6 @@ public class SigninActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         databaseRef = FirebaseDatabase.getInstance().getReference();
-        accountType = getIntent().getStringExtra("accountType");
 
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.editTextPassword);
@@ -67,7 +65,7 @@ public class SigninActivity extends AppCompatActivity {
                                     startActivity(mainIntent);  if (user != null) {
                                         String userId = user.getUid();
 
-                                        // Recuperar o tipo de conta do Firebase Realtime Database
+
                                         databaseRef.child("users").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -79,10 +77,7 @@ public class SigninActivity extends AppCompatActivity {
                                                         HashMap<String, Object> userData = new HashMap<>();
                                                         userData.put("accountType", accountType);
 
-                                                        Intent mainIntent = new Intent(SigninActivity.this, MainActivity.class);
-                                                        mainIntent.putExtra("accountType", accountType);
-                                                        startActivity(mainIntent);
-                                                        finish();
+                                                        redirectToAccountActivity(accountType);
                                                     } else {
                                                         Toast.makeText(SigninActivity.this, "Account type not found.", Toast.LENGTH_SHORT).show();
                                                     }
@@ -126,4 +121,27 @@ public class SigninActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void redirectToAccountActivity(String accountType) {
+        Intent intent;
+
+        switch (accountType) {
+            case "driver":
+                intent = new Intent(SigninActivity.this, DriverActivity.class);
+                break;
+            case "user":
+                intent = new Intent(SigninActivity.this, UserActivity.class);
+                break;
+            case "restaurant":
+                intent = new Intent(SigninActivity.this, RestaurantActivity.class);
+                break;
+            default:
+                Toast.makeText(this, "Invalid account type.", Toast.LENGTH_SHORT).show();
+                return;
+        }
+
+        startActivity(intent);
+        finish();
+    }
 }
+
